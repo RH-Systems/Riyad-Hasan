@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyad Hasan | Cyber Security & Programmer</title>
+    <style>
+        /* === CSS VARIABLES & RESET === */
+        :root {
+            --bg-color: #030305;
+            --text-main: #f0f0f5;
+            --text-muted: #8a8a9d;
+            --accent-cyan: #00f3ff;
+            --accent-glow: rgba(0, 243, 255, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-hover: rgba(255, 255, 255, 0.05);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* === BACKGROUND CANVAS === */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* === LAYOUT & CONTAINERS === */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        /* === TYPOGRAPHY === */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: linear-gradient(90deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .highlight { color: var(--accent-cyan); text-shadow: 0 0 15px var(--accent-glow); }
+
+        /* === HERO SECTION === */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 0;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            margin-bottom: 10px;
+            animation: fadeUp 1s ease forwards;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            animation: fadeUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero .code-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 50px;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            font-family: monospace;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+            animation: fadeUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+            animation: fadeUp 1s ease 0.6s forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-3px);
+        }
+
+        /* === GLASS CARDS === */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 243, 255, 0.05);
+        }
+
+        /* === ABOUT & GRID LAYOUTS === */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 243, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--accent-cyan);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .card-text { color: var(--text-muted); font-size: 1rem; }
+
+        /* === SOCIAL CARDS === */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .social-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            padding: 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .social-card .social-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition);
+        }
+
+        .social-card .social-info { display: flex; flex-direction: column; }
+        
+        .social-card .platform {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .social-card .username {
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .social-card:hover {
+            transform: scale(1.02) translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 243, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.1);
+        }
+
+        .social-card:hover .social-icon {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .social-card:hover .username { color: var(--accent-cyan); }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s all ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* === SVG ICONS === */
+        svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            section { padding: 60px 0; }
+            .hero h1 { font-size: 3rem; }
+            .social-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="code-badge">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                System Access Granted
+            </div>
+            <h1>Riyad <span class="highlight">Hasan</span></h1>
+            <p>Cyber Security Enthusiast | Ethical Hacker | Programmer</p>
+            <a href="#about" class="btn">Initialize Profile</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title reveal">Identity Matrix</h2>
+            <div class="grid-2">
+                <div class="glass-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <h3 class="card-title">About Me</h3>
+                    <p class="card-text">Driven by an insatiable curiosity for how systems work—and how they can be broken. My primary passion lies in understanding the complex architectures of the web and securing them against modern threats. Dedicated to continuous learning and mastering the art of ethical hacking.</p>
+                </div>
+
+                <div class="glass-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    </div>
+                    <h3 class="card-title">Education HQ</h3>
+                    <p class="card-text">Currently establishing my academic foundation at <strong>Tamirul millat</strong>. While traditional education builds my core logic, my self-taught pursuits in programming and cybersecurity build my future.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hobbies">
+        <div class="container">
+            <h2 class="section-title reveal">Core Protocols</h2>
+            <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <div class="glass-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <h3 class="card-title">Programming</h3>
+                    <p class="card-text">Writing clean, efficient code to build digital infrastructure. Turning complex problems into elegant logical solutions.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <h3 class="card-title">Cyber Security</h3>
+                    <p class="card-text">Analyzing networks, identifying vulnerabilities, and understanding the evolving landscape of digital defense mechanisms.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M2 12h4l3-9 5 18 3-9h5"></path></svg>
+                    </div>
+                    <h3 class="card-title">Ethical Hacking</h3>
+                    <p class="card-text">Thinking like an attacker to defend like a professional. Penetration testing and securing systems before they are compromised.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="socials">
+        <div class="container">
+            <h2 class="section-title reveal">Secure Connections</h2>
+            <div class="social-grid">
+                
+                <a href="https://www.facebook.com/profile.php?id=61587101026847" target="_blank" class="social-card reveal">
+                    <div class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </div>
+                    <div class="social-info">
+                        <span class="platform">Facebook</span>
+                        <span class="username">Riyad Hasan</span>
+                    </div>
+                </a>
+
+                <a href="https://instagram.com/okkotsu.__yuta
+" target="_blank" class="social-card reveal" style="transition-delay: 0.1s;">
+                    <div class="social-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </div>
+                    <div class="social-info">
+                        <span class="platform">Instagram</span>
+                        <span class="username">@okkotsu.__yuta
+</span>
+                    </div>
+                </a>
+
+                <a href="mailto:reyadhasan100az@gmail.com" class="social-card reveal" style="transition-delay: 0.2s;">
+                    <div class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <div class="social-info">
+                        <span class="platform">Encrypted Mail</span>
+                        <span class="username">reyadhasan100az</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* --- Scroll Reveal Animations --- */
+        const reveals = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            reveals.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Trigger on load
+
+        /* --- Network Canvas Animation (Cyber Aesthetic) --- */
+        const canvas = document.getElementById("canvas-bg");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        const numberOfParticles = (canvas.width * canvas.height) / 12000; // Responsive amount
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.directionX = (Math.random() - 0.5) * 1.5;
+                this.directionY = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 2 + 1;
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                // Draw connecting lines
+                for (let j = i; j < particlesArray.length; j++) {
+                    const dx = particlesArray[i].x - particlesArray[j].x;
+                    const dy = particlesArray[i].y - particlesArray[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 - distance/800})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
